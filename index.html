@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JIHC VOICE</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img class="logogoi" src="assets/Screenshot 2025-06-09 at 22.42.06.png" alt="JIHC VOICE Logo" />
+    </div>
+    <button class="burger" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">About</a></li>
+        <li><a href="prize.html">Prize</a></li>
+        <li><a href="photo.html">Photos</a></li>
+        <li><a href="crit.html">Criterias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="video-background">
+      <video autoplay muted loop id="bg-video">
+        <source src="assets/video.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div class="overlay">
+        <h1>JIHC VOICE</h1>
+      </div>
+    </section>
+
+    <section id="faq" class="faq">
+      <h2>Frequently Asked Questions</h2>
+      <div id="faq-container"></div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="register-section">
+      <h1 class="register-title">Register Now</h1>
+      <div class="register-container">
+        <img src="assets/DSC03385.JPG" alt="Telegram" class="whatsapp-img" />
+        <button id="register-btn">Register via Telegram</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 JIHC VOICE. All rights reserved.</p>
+  </footer>
+
+  <script>
+   
+    document.addEventListener('DOMContentLoaded', () => {
+      // Burger menu toggle
+      const burger = document.querySelector('.burger');
+      const navMenu = document.querySelector('.nav-menu');
+  
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          burger.classList.toggle('open');
+          burger.querySelectorAll('span').forEach((bar, index) => {
+            bar.classList.toggle(`bar${index + 1}-open`);
+          });
+        });
+      }
+  
+      // Load FAQ content dynamically from data.json
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          const faqContainer = document.getElementById('faq-container');
+          if (!faqContainer) return;
+  
+          data.faqs.forEach(faq => {
+            const faqItem = document.createElement('div');
+            faqItem.classList.add('faq-item');
+            faqItem.innerHTML = `
+              <div class="question">${faq.question}</div>
+              <div class="answer">${faq.answer}</div>
+            `;
+            faqContainer.appendChild(faqItem);
+  
+            const question = faqItem.querySelector('.question');
+            const answer = faqItem.querySelector('.answer');
+  
+            question.addEventListener('click', () => {
+              answer.style.display = (answer.style.display === 'block') ? 'none' : 'block';
+              question.classList.toggle('active');
+            });
+          });
+        })
+        .catch(error => console.error('Error loading FAQ data:', error));
+  
+      // Register button Telegram click handler
+      const registerBtn = document.getElementById('register-btn');
+      if (registerBtn) {
+        registerBtn.addEventListener('click', () => {
+            const telegramUsername = 'akerke_altynbekova';
+const message = encodeURIComponent('Hi! I would like to register for the JIHC VOICE competition.');
+window.open(`https://t.me/${telegramUsername}`, '_blank');
+
+        });
+      }
+    });
+  </script>
+  <style>
+    /* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    background-color: #000;
+    scroll-behavior: smooth;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+  
+  /* Header */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #111;
+  }
+  header .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  .logogoi {
+    width: 180px;
+  }
+  header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  header nav a {
+    color: #fff;
+    font-size: 1.1rem;
+    position: relative;
+  }
+  header nav a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #fff;
+    left: 0;
+    bottom: -4px;
+    transition: width 0.3s ease;
+  }
+  header nav a:hover::after {
+    width: 100%;
+  }
+  header nav a:hover {
+    color: #ddd;
+  }
+  
+  /* Video Background */
+  .video-background {
+    position: relative;
+    height: 80vh;
+    overflow: hidden;
+  }
+  #bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .overlay h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    animation: fadeInText 1.5s ease-in-out forwards;
+    text-align: center;
+  }
+  @keyframes fadeInText {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* FAQ Section */
+  .faq {
+    padding: 3rem 2rem;
+    background-color: #111;
+  }
+  .faq h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #fff;
+  }
+  .faq-item {
+    margin-bottom: 1.2rem;
+  }
+  .faq-item .question {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #1a1a1a;
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+  }
+  .faq-item .question:hover {
+    background-color: #222;
+  }
+  .faq-item .answer {
+    display: none;
+    padding: 1rem;
+    background-color: #222;
+    border: 1px solid #333;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+    animation: fadeInAnswer 0.4s ease-in-out;
+  }
+  @keyframes fadeInAnswer {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Register Section */
+  .register-section {
+    background: #111;
+    padding: 3rem 2rem;
+    text-align: center;
+    animation: fadeInRegister 1.5s ease forwards;
+  }
+  @keyframes fadeInRegister {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .register-section h2 {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .whatsapp-img {
+    width: 60px;
+    height: 60px;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+  }
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  #register-btn {
+  background-color: #0088cc; /* blue */
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  top: 70px;
+  left: 290px;
+  width: 400px;
+  height: 80px;
+  transition: background-color 0.3s ease;
+}
+
+#register-btn:hover {
+  background-color: #1e8bbe;
+}
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1.2rem;
+    background-color: #111;
+    color: #fff;
+    font-size: 0.95rem;
+    border-top: 1px solid #222;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    header {
+      flex-direction: row;
+      align-items: center;
+      padding: 1rem 1.5rem;
+    }
+  
+    header .logo {
+      font-size: 1.5rem;
+      margin-bottom: 0;
+    }
+  
+    header nav ul {
+      flex-direction: row;
+      gap: 1.2rem;
+      width: auto;
+    }
+  
+    header nav a {
+      font-size: 1rem;
+    }
+  
+    .overlay h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      padding: 0 1rem;
+    }
+  
+    .faq {
+      padding: 2rem 1rem;
+    }
+  
+    .faq h2 {
+      font-size: 1.8rem;
+    }
+  
+    .faq-item .question {
+      font-size: 1rem;
+    }
+  
+    .faq-item .answer {
+      font-size: 0.95rem;
+    }
+  
+    footer {
+      font-size: 0.85rem;
+      padding: 1rem;
+    }
+  
+    .register-container {
+      flex-direction: column;
+    }
+  
+    .whatsapp-img {
+      width: 50px;
+      height: 50px;
+    }
+  
+    #register-btn {
+      width: 100%;
+      padding: 1rem 0;
+      font-size: 1.1rem;
+    }
+  }
+/* Register Section Styles */
+.register-section {
+  padding: 4rem 2rem;
+  background-color: #111;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  position: relative;
+  top: 10px; /* moves title a bit down */
+}
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.whatsapp-img {
+  width: 480px;
+  height: 580px;
+  position: relative;
+  margin-left: -400px;
+  top: 60px;
+}
+
+#register-btn {
+  background-color: #25D366;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  top: 70px;
+  left: 290px;
+  width: 400px;
+  height: 80px;
+  transition: background-color 0.3s ease;
+}
+
+#register-btn:hover {
+  background-color: #1ebd57;
+}
+  /* Hide nav menu by default on small screens */
+@media (max-width: 768px) {
+    .nav-menu {
+      position: fixed;
+      top: 60px; /* below header */
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      width: 250px;
+      height: 100vh;
+      padding-top: 2rem;
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      z-index: 9999;
+      box-shadow: -3px 0 10px rgba(0, 0, 0, 0.5);
+    }
+  
+    /* Show menu when active */
+    .nav-menu.active {
+      display: flex;
+    }
+  
+    /* Make ul vertical */
+    .nav-menu ul {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    /* Style nav links */
+    .nav-menu a {
+      font-size: 1.3rem;
+      padding: 0.5rem 1.5rem;
+    }
+  
+    /* Optional: style burger for better visibility */
+    .burger span {
+      background-color: white;
+    }
+  }
+  @media (max-width: 768px) {
+    /* Register Section Adjustments */
+    .register-section {
+      padding: 2rem 1rem;
+    }
+  
+    .register-title {
+      font-size: 2rem;
+      top: 0; /* reset vertical shift */
+      margin-bottom: 1.5rem;
+    }
+  
+    .register-container {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    .whatsapp-img {
+      width: 250px !important;
+      height: auto !important;
+      margin-left: 0 !important;
+      top: 0 !important;
+      align-self: center;
+    }
+  
+    #register-btn {
+      width: 100% !important;
+      max-width: 300px;
+      height: 50px !important;
+      font-size: 1.1rem;
+      top: 0 !important;
+      left: 0 !important;
+      align-self: center;
+      padding: 0.75rem 1rem;
+    }
+  
+    /* Navigation menu fixes */
+    header nav ul {
+      gap: 1rem;
+    }
+  
+    /* Burger menu adjustments (if applicable) */
+    .burger {
+      display: block;
+    }
+  }
+  .burger {
+    display: none; /* shown only on mobile via media query */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    z-index: 1100;
+  }
+  
+  .burger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Show burger on mobile */
+  @media (max-width: 768px) {
+    .burger {
+      display: flex;
+    }
+  }
+  
+  /* Animate burger to X when active */
+  .burger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  
+  .burger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .burger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+  
+  
+  
+  </style>
+</body>
+</html>

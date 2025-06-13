@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JIHC Voice – Prizes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+      scroll-behavior: smooth;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #111;
+      backdrop-filter: blur(6px);
+    }
+
+    .logo img {
+      width: 180px;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .burger span {
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      display: block;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: #fff;
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      padding: 200px 20px 60px;
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1.title {
+      font-size: 3.5rem;
+      margin-top: -10px;
+      margin-bottom: 2rem;
+      color: #f9f7f5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      background-color: #111;
+      color: #fff;
+      font-size: 0.95rem;
+      border-top: 1px solid #222;
+    }
+
+    .prize-gallery {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: nowrap; /* prevent wrapping */
+      justify-content: center;
+      margin: 3rem 0 6rem;
+      overflow-x: auto; /* allow horizontal scroll if needed */
+      padding-bottom: 1rem; /* some space below for scroll bar */
+    }
+
+    .prize-item {
+      width: 500px; /* match image width */
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .prize-item img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #eeece7;
+      display: block;
+      margin: 10px 0; /* vertical spacing */
+    }
+
+    .prize-item:hover {
+      transform: scale(1.05);
+    }
+
+    .prize-item p {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 8px;
+    }
+
+    .modal p {
+      color: #ddd;
+      margin-top: 15px;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal::after {
+      content: "×";
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2.5rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    h2.criteria-title {
+      margin-top: 0;
+      margin-bottom: 60px;
+      font-size: 2rem;
+      color: #f0f4f5;
+    }
+
+    .criteria-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 120px; /* space before rounds */
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards;
+      animation-delay: 0.2s;
+    }
+
+    .criteria-card {
+      background: #111;
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid #333;
+      transition: all 0.3s ease;
+      color: #eee;
+      font-size: 1rem;
+      text-align: left;
+      box-shadow: 0 0 10px rgba(255, 204, 112, 0.05);
+    }
+
+    .criteria-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(255, 204, 112, 0.3);
+      color: #fdfcfb;
+    }
+
+    /* Rounds Section */
+
+    .rounds-section {
+      max-width: 1000px;
+      margin: 0 auto 80px;
+      text-align: left;
+      color: #eee;
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards;
+      animation-delay: 0.5s;
+    }
+
+    .rounds-section h2 {
+      font-size: 2rem;
+      margin-bottom: 40px;
+      color: #f0f4f5;
+      text-align: center;
+    }
+
+    .round {
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: #111;
+      border-radius: 12px;
+      border: 1px solid #222;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .round:hover {
+      background-color: rgba(0, 123, 255, 0.1);
+    }
+
+    .round-title {
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.5rem;
+      user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .round-description {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #ccc;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: #111;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        padding: 1rem;
+        border-radius: 0 0 0 10px;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .burger {
+        display: flex;
+      }
+
+      h1.title {
+        font-size: 2.2rem;
+      }
+
+      .prize-item {
+        width: 300px;
+      }
+
+      .criteria-container {
+        grid-template-columns: 1fr;
+      }
+
+      .round-description {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img class="logogoi" src="assets/Screenshot 2025-06-09 at 22.42.06.png" alt="JIHC VOICE Logo" />
+  </div>
+  <button class="burger" aria-label="Toggle navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <nav class="nav-menu">
+    <ul>
+      <li><a href="index.html">About</a></li>
+      <li><a href="prize.html">Prize</a></li>
+      <li><a href="photo.html">Photos</a></li>
+      <li><a href="crit.html">Criterias</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h1 class="title">Prizes</h1>
+
+  <section class="prize-gallery">
+    <div class="prize-item" data-text="🏅 This is the grand prize for the winner of JIHC Voice. Congratulations!">
+      <img src="assets/camera_12_05.png" alt="1st Place" />
+      <p>1st Place</p>
+    </div>
+    <div class="prize-item" data-text="🥈 Awarded to the remarkable runner-up with exceptional talent.">
+      <img src="assets/pos-marshall-major-iv-black-03-600x613.png" alt="2nd Place" />
+      <p>2nd Place</p>
+    </div>
+    <div class="prize-item" data-text="🥉 Given to the outstanding performer securing third place.">
+      <img src="assets/images-15.jpeg" alt="3rd Place" />
+      <p>3rd Place</p>
+    </div>
+  </section>
+
+  <h2 class="criteria-title">How Can You Get It?</h2>
+  <div class="criteria-container" id="criteriaContainer">
+    <!-- Cards injected by JS -->
+  </div>
+
+  <section class="rounds-section">
+    <h2>Competition Rounds</h2>
+
+    <div class="round">
+      <div class="round-title">Round 1</div>
+      <div class="round-description">
+        In the initial solo round, a panel of expert judges from Kazakhstan carefully evaluate each participant’s vocal skills, stage presence, and overall artistry. This stage determines the candidates who will advance to the next phase.
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">Round 2</div>
+      <div class="round-description">
+        Successful participants then select a personal mentor who will guide and support them through the competition journey, helping to refine their performances and prepare for upcoming challenges.
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">Round 3</div>
+      <div class="round-description">
+        Each mentor reviews their mentees and selects two outstanding individuals from their group of four to progress further, focusing on talent, improvement, and potential.
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">Round 4</div>
+      <div class="round-description">
+        From the final two contenders, the mentor chooses one to move into the grand finale. This finalist will then perform alongside their mentor in a spectacular duet performance.
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<div class="modal" id="modal">
+  <img id="modal-img" src="" alt="">
+  <p id="modal-text"></p>
+</div>
+
+<footer>
+  <p>&copy; 2025 JIHC VOICE. All rights reserved.</p>
+</footer>
+
+<script>
+  // Toggle mobile nav
+  const burger = document.querySelector('.burger');
+  const navList = document.querySelector('nav ul');
+  burger.addEventListener('click', () => {
+    navList.classList.toggle('show');
+  });
+
+  // Modal functionality
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modal-img');
+  const modalText = document.getElementById('modal-text');
+  const prizeItems = document.querySelectorAll('.prize-item');
+
+  prizeItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const img = item.querySelector('img');
+      modalImg.src = img.src;
+      modalImg.alt = img.alt;
+      modalText.textContent = item.getAttribute('data-text');
+      modal.classList.add('active');
+    });
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target !== modalImg && e.target !== modalText) {
+      modal.classList.remove('active');
+    }
+  });
+
+  // Criteria Cards with JS
+  const criteriaList = [
+    "Strong stage presence and confidence",
+    "Unique and expressive act",
+    "Creative and elegant dress or costume",
+    "Use of interesting and suitable music",
+    "Perfect and powerful singing voice",
+    "Connection with the audience",
+    "Clear pronunciation and emotional delivery",
+    "Originality and creativity in performance",
+    "Professionalism and preparation",
+  ];
+
+  const criteriaContainer = document.getElementById("criteriaContainer");
+  criteriaList.forEach(text => {
+    const div = document.createElement('div');
+    div.className = 'criteria-card';
+    div.textContent = text;
+    criteriaContainer.appendChild(div);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JIHC VOICE - Criteria</title>
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      background-color: #000;
+      scroll-behavior: smooth;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.3s ease;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid #111;
+    }
+    header .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .logogoi {
+      width: 180px;
+      max-width: 100%;
+      height: auto;
+    }
+    header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+    header nav a {
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative;
+    }
+    header nav a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: #3399FF; /* blue accent */
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    header nav a:hover::after {
+      width: 100%;
+    }
+    header nav a:hover {
+      color: #ddd;
+    }
+    /* Burger menu styles */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .burger span {
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      display: block;
+    }
+    .burger.open span.bar1-open {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .burger.open span.bar2-open {
+      opacity: 0;
+    }
+    .burger.open span.bar3-open {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+    /* Nav menu for mobile */
+    .nav-menu {
+      display: flex;
+    }
+    @media (max-width: 768px) {
+      .burger {
+        display: flex;
+      }
+      .nav-menu {
+        position: fixed;
+        top: 60px;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.95);
+        width: 250px;
+        height: 100vh;
+        padding-top: 2rem;
+        display: none;
+        flex-direction: column;
+        gap: 1.5rem;
+        z-index: 9999;
+        box-shadow: -3px 0 10px rgba(0, 0, 0, 0.5);
+      }
+      .nav-menu.active {
+        display: flex;
+      }
+      .nav-menu ul {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .nav-menu a {
+        font-size: 1.3rem;
+        padding: 0.5rem 1.5rem;
+      }
+    }
+
+    /* Main content */
+    main {
+      padding: 120px 2rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-y: auto;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+    }
+    .criteria-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 2rem;
+    }
+    .criteria-item {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      margin-bottom: 1.8rem;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 0 15px #222 inset;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+      position: relative;
+    }
+    .criteria-item:hover {
+      background: #222;
+    }
+    .criteria-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 0.7rem;
+      color: #3399FF; /* blue accent */
+      text-shadow: 0 0 4px #3399FF;
+    }
+    .criteria-description {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 0.9rem;
+      line-height: 1.5;
+      pointer-events: none;
+    }
+    /* Notes area is collapsed by default and animates open */
+    .criteria-notes {
+      font-size: 0.95rem;
+      color: #bbb;
+      background: #222;
+      padding: 0.8rem 1rem;
+      border-left: 4px solid #3399FF; /* blue accent */
+      border-radius: 4px;
+      max-width: 100%;
+      white-space: pre-wrap;
+      line-height: 1.4;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+      pointer-events: none;
+      margin-top: 0;
+    }
+    /* When expanded */
+    .criteria-item.expanded .criteria-notes {
+      max-height: 300px;
+      opacity: 1;
+      padding: 0.8rem 1rem;
+      pointer-events: auto;
+      margin-top: 0.7rem;
+    }
+    /* Add a small icon indicator */
+    .criteria-item::after {
+      content: '+';
+      position: absolute;
+      right: 1.5rem;
+      top: 1.8rem;
+      font-size: 1.8rem;
+      color: #3399FF; /* blue accent */
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    .criteria-item.expanded::after {
+      content: '-';
+      transform: rotate(180deg);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      background-color: #111;
+      color: #fff;
+      font-size: 0.95rem;
+      border-top: 1px solid #222;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img class="logogoi" src="assets/Screenshot 2025-06-09 at 22.42.06.png" alt="JIHC VOICE Logo" />
+    </div>
+    <button class="burger" aria-label="Toggle navigation">
+      <span class="bar1"></span>
+      <span class="bar2"></span>
+      <span class="bar3"></span>
+    </button>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html">About</a></li>
+        <li><a href="prize.html">Prize</a></li>
+        <li><a href="photo.html">Photos</a></li>
+        <li><a href="crit.html">Criterias</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Competition Criteria - Voice & Performance</h1>
+    <ul class="criteria-list" id="criteria-list">
+      <li>Loading criteria...</li>
+    </ul>
+  </main>
+
+  <footer>
+    &copy; 2025 JIHC VOICE. All rights reserved.
+  </footer>
+
+  <script>
+    // Burger menu toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.burger');
+      const navMenu = document.querySelector('.nav-menu');
+
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          navMenu.classList.toggle('active');
+          burger.classList.toggle('open');
+
+          burger.querySelectorAll('span').forEach((bar, index) => {
+            bar.classList.toggle(`bar${index + 1}-open`);
+          });
+        });
+      }
+
+      // Criteria data
+      const criteria = [
+        {
+          title: "Strong Stage Presence and Confidence",
+          description: "The performer's ability to command the stage with charisma, energy, and self-assurance, engaging the audience effectively.",
+          notes: "- Pro: Engages the audience and holds attention.\n- Con: Lack of confidence can distract or disengage listeners."
+        },
+        {
+          title: "Unique and Expressive Act",
+          description: "Incorporating individuality and emotional depth into the performance to create a memorable and impactful experience.",
+          notes: "- Pro: Leaves a lasting impression.\n- Con: Generic acts may fail to connect emotionally."
+        },
+        {
+          title: "Creative and Elegant Dress or Costume",
+          description: "The choice of attire that complements the music and personality, enhancing the overall stage persona.",
+          notes: "- Pro: Supports the storytelling of the act.\n- Con: Inappropriate costume may distract or confuse the audience."
+        },
+        {
+          title: "Use of Interesting and Suitable Music",
+          description: "Selection of music that fits the singer’s voice and style, enhancing the performance's emotional impact.",
+          notes: "- Pro: Elevates performance quality.\n- Con: Poor song choice can limit vocal showcase."
+        },
+        {
+          title: "Perfect and Powerful Singing Voice",
+          description: "Technical vocal ability including pitch accuracy, control, strength, and tone that fits the genre and song.",
+          notes: "- Pro: Demonstrates mastery and skill.\n- Con: Weak or off-pitch vocals reduce credibility."
+        },
+        {
+          title: "Connection with the Audience",
+          description: "Ability to communicate feelings and create rapport, making the audience feel involved and moved.",
+          notes: "- Pro: Builds emotional bridge.\n- Con: Lack of connection results in disinterest."
+        },
+        {
+          title: "Clear Pronunciation and Emotional Delivery",
+          description: "Articulate words clearly while conveying emotions sincerely, enhancing song storytelling.",
+          notes: "- Pro: Ensures message is understood.\n- Con: Mumbled or emotionless singing loses impact."
+        },
+        {
+          title: "Originality and Creativity in Performance",
+          description: "Innovative interpretation and presentation that distinguish the act from others.",
+          notes: "- Pro: Makes act stand out.\n- Con: Imitative acts are less impressive."
+        },
+        {
+          title: "Professionalism and Preparation",
+          description: "Demonstrating readiness, punctuality, and respect for competition rules and fellow contestants.",
+          notes: "- Pro: Smooth performance flow.\n- Con: Unpreparedness disrupts event."
+        },
+        {
+          title: "Adherence to Time Limits",
+          description: "Performing within the allowed duration to keep the event schedule and audience engagement.",
+          notes: "- Pro: Shows professionalism.\n- Con: Overrunning can disrupt flow."
+        }
+      ];
+
+      const criteriaList = document.getElementById('criteria-list');
+
+      // Clear placeholder
+      criteriaList.innerHTML = '';
+
+      // Render criteria items
+      criteria.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'criteria-item';
+        li.setAttribute('tabindex', '0');
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-expanded', 'false');
+        li.setAttribute('aria-controls', `notes-${index}`);
+
+        li.innerHTML = `
+          <div class="criteria-title">${item.title}</div>
+          <div class="criteria-description">${item.description}</div>
+          <div class="criteria-notes" id="notes-${index}">${item.notes}</div>
+        `;
+
+        criteriaList.appendChild(li);
+      });
+
+      // Toggle expanded details on click or keyboard
+      criteriaList.addEventListener('click', e => {
+        let target = e.target;
+
+        while (target && !target.classList.contains('criteria-item')) {
+          target = target.parentElement;
+        }
+        if (!target) return;
+
+        const expanded = target.classList.toggle('expanded');
+        target.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+
+      // Keyboard accessibility for Enter and Space to toggle
+      criteriaList.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          let target = e.target;
+          if (target.classList.contains('criteria-item')) {
+            e.preventDefault();
+            const expanded = target.classList.toggle('expanded');
+            target.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
